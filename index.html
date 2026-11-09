@@ -14,37 +14,21 @@
 </style>
 </head>
 <body>
-<h1>Select one document</h1>
-<p>You can download only one PDF.</p>
-<button onclick="getPdf('payment_ack_60.pdf')">Receipt of Rs 60</button>
-<button onclick="getPdf('payment_ack_100.pdf')">Receipt of Rs 100</button>
-<button onclick="getPdf('payment_ack_120.pdf')">Receipt of Rs 120</button>
-<button onclick="getPdf('payment_ack_300.pdf')">Receipt of Rs 300</button>
+<h1>Select a document</h1>
+<button onclick="getPdf('payment_ack_60.pdf','Receipt of Rs 60.pdf')">Receipt of Rs 60</button>
+<button onclick="getPdf('payment_ack_100.pdf','Receipt of Rs 100.pdf')">Receipt of Rs 100</button>
+<button onclick="getPdf('payment_ack_120.pdf','Receipt of Rs 120.pdf')">Receipt of Rs 120</button>
+<button onclick="getPdf('payment_ack_300.pdf','Receipt of Rs 300.pdf')">Receipt of Rs 300</button>
 <p id="msg"></p>
 <script>
-const KEY = 'pdf_downloaded_v1';
-const RESET_CODE = 'change-this-secret';   // admin: open the page with ?reset=change-this-secret
-
-function lockButtons(text){
-  document.querySelectorAll('button').forEach(b => b.disabled = true);
-  document.getElementById('msg').textContent = text;
+function setButtons(disabled){
+  document.querySelectorAll('button').forEach(b => b.disabled = disabled);
 }
-function wasDownloaded(){
-  try { return localStorage.getItem(KEY); } catch(e){ return null; }
-}
-(function init(){
-  const q = new URLSearchParams(location.search);
-  if (q.get('reset') === RESET_CODE) { try{ localStorage.removeItem(KEY); }catch(e){} }
-  const prev = wasDownloaded();
-  if (prev) lockButtons('Already downloaded: ' + prev + '. Only one download is allowed.');
-})();
-
-async function getPdf(file){
-  if (wasDownloaded()) return;
+async function getPdf(file, saveAs){
   const msg = document.getElementById('msg');
-  document.querySelectorAll('button').forEach(b => b.disabled = true);
+  setButtons(true);
   try{
-    msg.textContent = 'Preparing ' + file + '...';
+    msg.textContent = 'Preparing your document...';
     const bytes = await (await fetch(file)).arrayBuffer();
     const doc = await PDFLib.PDFDocument.load(bytes, {ignoreEncryption:true});
     const font = await doc.embedFont(PDFLib.StandardFonts.Helvetica);
@@ -55,14 +39,13 @@ async function getPdf(file){
     const blob = new Blob([await doc.save()], {type:'application/pdf'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'Receipt of Rs ' + file;
+    a.download = saveAs;
     document.body.appendChild(a); a.click(); a.remove();
-    try { localStorage.setItem(KEY, file); } catch(e){}
-    lockButtons('Downloaded ' + file + '. Only one download is allowed.');
+    msg.textContent = 'Downloaded ' + saveAs;
   }catch(e){
-    document.querySelectorAll('button').forEach(b => b.disabled = false);
     msg.textContent = 'Error, please try again: ' + e.message;
   }
+  setButtons(false);
 }
 </script>
 </body>
