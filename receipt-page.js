@@ -4,17 +4,75 @@ function setButtons(disabled) {
   });
 }
 
+function formatDateTime() {
+  return new Date().toLocaleString('en-IN', {
+    day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit',
+    minute: '2-digit', second: '2-digit', hour12: true
+  });
+}
+
+function downloadStampedReceipt(receipt) {
+  var msg = document.getElementById('msg');
+  var previewImage = document.getElementById('receipt-image');
+  var image = new Image();
+  var cacheBust = receipt.file + '?v=2';
+
+  image.onload = function () {
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    context.drawImage(image, 0, 0);
+
+    var fontSize = Math.max(18, Math.round(canvas.width * 0.025));
+    var stampY = Math.round(canvas.height * (receipt.stampYRatio || 0.62));
+    context.font = 'bold ' + fontSize + 'px Georgia, serif';
+    context.fillStyle = '#9b1c1c';
+    context.textAlign = 'center';
+    context.textBaseline = 'top';
+    context.fillText('Date & Time: ' + formatDateTime(), canvas.width / 2, stampY);
+
+    canvas.toBlob(function (blob) {
+      if (!blob) {
+        msg.textContent = 'Error, please try again: Could not create image';
+        setButtons(false);
+        return;
+      }
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = url;
+      link.download = receipt.saveAs;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      previewImage.src = url;
+      msg.textContent = 'Downloaded receipt with date and time.';
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      setButtons(false);
+    }, 'image/jpeg', 0.95);
+  };
+
+  image.onerror = function () {
+    msg.textContent = 'Error, please try again: Receipt image is not available';
+    setButtons(false);
+  };
+  image.src = cacheBust;
+}
+
 function showReceipt(receipt) {
   var preview = document.getElementById('preview');
   var image = document.getElementById('receipt-image');
   var download = document.getElementById('download');
 
   setButtons(true);
-  image.src = receipt.file;
+  image.src = receipt.file + '?v=2';
   image.alt = receipt.label;
-  download.href = receipt.file;
-  download.download = receipt.saveAs;
-  download.textContent = 'Download ' + receipt.label;
+  download.onclick = function (event) {
+    event.preventDefault();
+    downloadStampedReceipt(receipt);
+  };
+  download.removeAttribute('download');
+  download.textContent = 'Download ' + receipt.label + ' with Date & Time';
   preview.hidden = false;
   document.getElementById('msg').textContent = 'Receipt selected.';
   setButtons(false);
