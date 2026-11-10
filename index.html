@@ -3,50 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Download PDF</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<title>SSA Receipt QR Destinations</title>
 <style>
-  body{font-family:Arial,sans-serif;max-width:420px;margin:40px auto;padding:0 16px;text-align:center}
-  button{display:block;width:100%;margin:14px 0;padding:16px;background:#1a73e8;color:#fff;
-    border:0;border-radius:8px;font-size:18px}
-  button:disabled{background:#aaa}
-  #msg{color:#555;min-height:24px}
+  body{font-family:Arial,sans-serif;max-width:560px;margin:40px auto;padding:0 16px}
+  a{display:block;margin:12px 0;padding:14px;background:#1a73e8;color:#fff;text-decoration:none;border-radius:8px;text-align:center}
 </style>
 </head>
 <body>
-<h1>Please Select A Receipt</h1>
-<button onclick="getPdf('payment_ack_60.pdf','Receipt of Rs 60.pdf')">Receipt of Rs 60</button>
-<button onclick="getPdf('payment_ack_100.pdf','Receipt of Rs 100.pdf')">Receipt of Rs 100</button>
-<button onclick="getPdf('payment_ack_120.pdf','Receipt of Rs 120.pdf')">Receipt of Rs 120</button>
-<button onclick="getPdf('payment_ack_300.pdf','Receipt of Rs 300.pdf')">Receipt of Rs 300</button>
-<p id="msg"></p>
-<script>
-function setButtons(disabled){
-  document.querySelectorAll('button').forEach(b => b.disabled = disabled);
-}
-async function getPdf(file, saveAs){
-  const msg = document.getElementById('msg');
-  setButtons(true);
-  try{
-    msg.textContent = 'Preparing your document...';
-    const bytes = await (await fetch(file)).arrayBuffer();
-    const doc = await PDFLib.PDFDocument.load(bytes, {ignoreEncryption:true});
-    const font = await doc.embedFont(PDFLib.StandardFonts.Helvetica);
-    const stamp = 'Downloaded: ' + new Date().toLocaleString('en-IN',
-      {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    doc.getPages().forEach(p => p.drawText(stamp,
-      {x:20, y:15, size:9, font:font, color:PDFLib.rgb(0.3,0.3,0.3)}));
-    const blob = new Blob([await doc.save()], {type:'application/pdf'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = saveAs;
-    document.body.appendChild(a); a.click(); a.remove();
-    msg.textContent = 'Downloaded ' + saveAs;
-  }catch(e){
-    msg.textContent = 'Error, please try again: ' + e.message;
-  }
-  setButtons(false);
-}
-</script>
+<h1>SSA Receipt QR Destinations</h1>
+<a href="jco-matinee.html">JCOs / ORs - Matinee</a>
+<a href="jco-evening.html">JCOs / ORs - Evening</a>
+<a href="officers-matinee.html">Officers - Matinee</a>
+<a href="officers-evening.html">Officers - Evening</a>
+<a href="civilian-guests-matinee.html">Civilian Guests - Matinee</a>
+<a href="civilian-guests-evening.html">Civilian Guests - Evening</a>
 </body>
 </html>
