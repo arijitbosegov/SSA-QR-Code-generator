@@ -16,10 +16,6 @@
   .instruction{margin:0 0 18px;font-size:1rem}
   button,#download{display:block;width:100%;margin:14px 0;padding:16px;background:#1a73e8;color:#fff;border:0;border-radius:8px;font-size:18px;text-decoration:none;cursor:pointer}
   button:disabled{background:#aaa;cursor:default}
-  #msg{color:#555;min-height:24px}
-  #preview{margin-top:24px}
-  #receipt-image{max-width:100%;height:auto;border:1px solid #d5bfa8;border-radius:8px}
-  #download{background:#188038}
 </style>
 </head>
 <body>
@@ -32,11 +28,6 @@
 </header>
 <p class="instruction">Please download the receipt as per your payment.</p>
 <div id="receipts"></div>
-<p id="msg"></p>
-<section id="preview" hidden>
-  <img id="receipt-image" alt="Selected receipt">
-  <a id="download">Download receipt</a>
-</section>
 <script>var RECEIPT_PAGE = {title:"Officers - Matinee",receipts:[{label:"Receipt of Rs 100",file:"Offrs_100_Matinee.jpg",saveAs:"Officers Receipt Rs 100 - Matinee.jpg"},{label:"Receipt of Rs 200",file:"Offrs_200_Matinee.jpg",saveAs:"Officers Receipt Rs 200 - Matinee.jpg"}]};</script>
 <script src="receipt-page.js"></script>
 </body>
