@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Download Receipt</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+  body{font-family:Arial,sans-serif;max-width:420px;margin:40px auto;padding:0 16px;text-align:center}
+  button{display:block;width:100%;margin:14px 0;padding:16px;background:#1a73e8;color:#fff;border:0;border-radius:8px;font-size:18px}
+  button:disabled{background:#aaa}
+  #msg{color:#555;min-height:24px}
+</style>
+</head>
+<body>
+<h1 id="title"></h1>
+<div id="receipts"></div>
+<p id="msg"></p>
+<script>var RECEIPT_PAGE = {title:"Civilian Guests - Matinee",receipts:[{label:"Receipt of Rs 300",file:"payment_ack_300_matinee.pdf",saveAs:"Receipt of Rs 300 - Matinee.pdf"}]};</script>
+<script src="receipt-page.js"></script>
+</body>
+</html>
