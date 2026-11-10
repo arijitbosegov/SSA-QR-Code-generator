@@ -12,8 +12,6 @@ function formatDateTime() {
 }
 
 function downloadStampedReceipt(receipt) {
-  var msg = document.getElementById('msg');
-  var previewImage = document.getElementById('receipt-image');
   var image = new Image();
   image.onload = function () {
     var canvas = document.createElement('canvas');
@@ -32,7 +30,6 @@ function downloadStampedReceipt(receipt) {
 
     canvas.toBlob(function (blob) {
       if (!blob) {
-        msg.textContent = 'Error, please try again: Could not create image';
         setButtons(false);
         return;
       }
@@ -43,35 +40,14 @@ function downloadStampedReceipt(receipt) {
       document.body.appendChild(link);
       link.click();
       link.remove();
-      previewImage.src = url;
-      msg.textContent = 'Downloaded receipt with date and time.';
       setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
       setButtons(false);
     }, 'image/jpeg', 0.95);
   };
   image.onerror = function () {
-    msg.textContent = 'Error, please try again: Receipt image is not available';
     setButtons(false);
   };
   image.src = receipt.file + '?v=2';
-}
-
-function showReceipt(receipt) {
-  var preview = document.getElementById('preview');
-  var image = document.getElementById('receipt-image');
-  var download = document.getElementById('download');
-  setButtons(true);
-  image.src = receipt.file + '?v=2';
-  image.alt = receipt.label;
-  download.onclick = function (event) {
-    event.preventDefault();
-    downloadStampedReceipt(receipt);
-  };
-  download.removeAttribute('download');
-  download.textContent = 'Download ' + receipt.label;
-  preview.hidden = false;
-  document.getElementById('msg').textContent = 'Receipt selected.';
-  setButtons(false);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -81,7 +57,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var button = document.createElement('button');
     button.type = 'button';
     button.textContent = receipt.label;
-    button.onclick = function () { showReceipt(receipt); };
+    button.onclick = function () {
+      setButtons(true);
+      downloadStampedReceipt(receipt);
+    };
     document.getElementById('receipts').appendChild(button);
   });
 });
