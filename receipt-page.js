@@ -15,8 +15,6 @@ function downloadStampedReceipt(receipt) {
   var msg = document.getElementById('msg');
   var previewImage = document.getElementById('receipt-image');
   var image = new Image();
-  var cacheBust = receipt.file + '?v=2';
-
   image.onload = function () {
     var canvas = document.createElement('canvas');
     var context = canvas.getContext('2d');
@@ -24,8 +22,8 @@ function downloadStampedReceipt(receipt) {
     canvas.height = image.naturalHeight;
     context.drawImage(image, 0, 0);
 
-    var fontSize = Math.max(18, Math.round(canvas.width * 0.025));
-    var stampY = Math.round(canvas.height * (receipt.stampYRatio || 0.62));
+    var fontSize = Math.max(22, Math.round(canvas.width * 0.04));
+    var stampY = Math.round(canvas.height * (receipt.stampYRatio || 0.025));
     context.font = 'bold ' + fontSize + 'px Georgia, serif';
     context.fillStyle = '#9b1c1c';
     context.textAlign = 'center';
@@ -51,19 +49,17 @@ function downloadStampedReceipt(receipt) {
       setButtons(false);
     }, 'image/jpeg', 0.95);
   };
-
   image.onerror = function () {
     msg.textContent = 'Error, please try again: Receipt image is not available';
     setButtons(false);
   };
-  image.src = cacheBust;
+  image.src = receipt.file + '?v=2';
 }
 
 function showReceipt(receipt) {
   var preview = document.getElementById('preview');
   var image = document.getElementById('receipt-image');
   var download = document.getElementById('download');
-
   setButtons(true);
   image.src = receipt.file + '?v=2';
   image.alt = receipt.label;
