@@ -68,7 +68,7 @@ function showReceipt(receipt) {
     downloadStampedReceipt(receipt);
   };
   download.removeAttribute('download');
-  download.textContent = 'Download ' + receipt.label';
+  download.textContent = 'Download ' + receipt.label;
   preview.hidden = false;
   document.getElementById('msg').textContent = 'Receipt selected.';
   setButtons(false);
