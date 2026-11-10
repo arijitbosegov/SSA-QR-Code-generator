@@ -68,14 +68,15 @@ function showReceipt(receipt) {
     downloadStampedReceipt(receipt);
   };
   download.removeAttribute('download');
-  download.textContent = 'Download ' + receipt.label + ' with Date & Time';
+  download.textContent = 'Download ' + receipt.label';
   preview.hidden = false;
   document.getElementById('msg').textContent = 'Receipt selected.';
   setButtons(false);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('title').textContent = RECEIPT_PAGE.title;
+  var title = document.getElementById('title');
+  if (title) title.textContent = RECEIPT_PAGE.title;
   RECEIPT_PAGE.receipts.forEach(function (receipt) {
     var button = document.createElement('button');
     button.type = 'button';
